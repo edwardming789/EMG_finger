@@ -12,10 +12,10 @@
 
 //Define Servo motor
 Servo SERVO_1;
-const int filterWeight = 64;  // higher numbers = heavier filtering
+const int filterWeight = 32;  // higher numbers = heavier filtering
 const int numReadings = 6;
 
-int average = 60;                // the average
+int average;                // the average
 int mappingv;
 /*-------------------------------- void setup ------------------------------------------------*/
 
@@ -35,7 +35,7 @@ void loop(){
   //The "Value" variable reads the value from the analog pin to which the sensor is connected.
   for (int i = 0; i < numReadings; i++) {
     average = average + (analogRead(EMG_PIN) - average) / filterWeight;
-    delay(3);
+    delay(2);
   }
 
   //If the sensor value is GREATER than the THRESHOLD, the servo motor will turn to 180 degrees.
