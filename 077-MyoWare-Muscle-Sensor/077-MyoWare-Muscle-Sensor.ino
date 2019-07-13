@@ -3,7 +3,7 @@
 //Threshold for servo motor control with muscle sensor. 
 //You can set a threshold according to the maximum and minimum values of the muscle sensor.
 #define THRESHOLD 200
-#define baseline 90
+#define baseline 100
 //Pin number where the sensor is connected. (Analog 0)
 #define EMG_PIN 0
 
@@ -28,8 +28,8 @@ int lthreshold;
 int mappingv;
 
 bool stage1;
-bool stage2;
-bool stage3;
+bool stage2 = false;
+bool stage3 = false;
 /*-------------------------------- void setup ------------------------------------------------*/
 
 void setup(){
@@ -70,10 +70,13 @@ void loop(){
     if(average > THRESHOLD){
       if (average < maximum){
         SERVO_1.write(179);
-        lthreshold = maximum * 0.56;
+        lthreshold = maximum * 0.65;
         stage1 = false;
         stage2 = true;
         }
+    }
+    else{
+      SERVO_1.write(0);
     }
   }
 
@@ -87,11 +90,11 @@ void loop(){
   if (stage3){
     if (average > lthreshold) {
       SERVO_1.write(0);
-      if (average < baseline) {
+    }
+    if (average < baseline) {
         maximum = 0;
         stage3 = false;
         stage1 = true;
-      }
     }
   }
   
