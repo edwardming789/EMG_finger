@@ -8,8 +8,6 @@ int average = 0;                // the average
 int minimum = 40;
 int maximum = 40;
 int value;
-int counter = 0;
-int tempvalue[49];
 int inputPin = A0;
 
 void setup() {
@@ -46,15 +44,6 @@ void loop() {
   average = total / numReadings;
   // send it to the computer as ASCII digits
   Serial.println(average);
-
-  if (counter < 50){
-    tempvalue[counter]=average
-    counter ++;
-  }
-  else{
-  
-  }
-
-  
+ 
   delay(1);        // delay in between reads for stability
 }
