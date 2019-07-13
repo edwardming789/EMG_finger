@@ -35,7 +35,6 @@ void loop(){
   //The "Value" variable reads the value from the analog pin to which the sensor is connected.
   for (int i = 0; i < numReadings; i++) {
     average = average + (analogRead(EMG_PIN) - average) / filterWeight;
-    delay(2);
   }
 
   //If the sensor value is GREATER than the THRESHOLD, the servo motor will turn to 180 degrees.
