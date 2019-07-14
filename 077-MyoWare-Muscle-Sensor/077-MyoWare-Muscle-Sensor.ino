@@ -25,7 +25,8 @@ int temp = 0;
 int counter = 0;
 
 int lthreshold;
-int mappingv;
+int avg1;
+float k;
 
 bool stage1;
 bool stage2 = false;
@@ -68,7 +69,19 @@ void loop(){
   //If the sensor value is GREATER than the THRESHOLD, the servo motor will turn to 180 degrees.
   if (stage1){
     if(average > THRESHOLD){
-      if (average < maximum){
+      if (counter < 10) {
+        if (counter = 0){
+          avg1 = average;
+        }
+        counter++;
+      }
+      else{
+        k = (avg1 - average)/10;
+        counter = 0;
+        Serial.println(k);
+      }
+      
+      if (average < maximum) {
         SERVO_1.write(179);
         lthreshold = maximum * 0.65;
         stage1 = false;
@@ -98,6 +111,6 @@ void loop(){
     }
   }
   
-  Serial.println(average);
+  //Serial.println(average);
   delay(1);
 }
