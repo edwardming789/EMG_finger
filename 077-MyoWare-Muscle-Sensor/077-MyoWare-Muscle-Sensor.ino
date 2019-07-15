@@ -2,8 +2,8 @@
 
 //Threshold for servo motor control with muscle sensor. 
 //You can set a threshold according to the maximum and minimum values of the muscle sensor.
-#define THRESHOLD 200
-#define baseline 90
+#define THRESHOLD 115
+#define baseline 65
 //Pin number where the sensor is connected. (Analog 0)
 #define EMG_PIN 0
 
@@ -26,11 +26,14 @@ int counter = 0;
 
 int lthreshold;
 int avg[9];
-int k = 0;
+
+float k = 0.0;
+float factor = 0.0;
 
 bool stage1;
 bool stage2 = false;
 bool stage3 = false;
+bool state = false;
 /*-------------------------------- void setup ------------------------------------------------*/
 
 void setup(){
@@ -73,28 +76,33 @@ void loop(){
         avg[counter] = average;
         counter ++;
       }
-      else{
-        k = (average - avg[0])/10;
-        counter = 11;
+      else {
+        k = ((float)(average - avg[0]))/10.0;
+        counter = 0;
+        
         //Serial.println(k);
       }
 
-      if (k > 20) {
-          SERVO_1.write(179);
+      if ((k > 10) && (average > 180) && (!state)) {
+        SERVO_1.write(179);
+        factor = 0.63;
+        state = true;
       }
-      else if(k > 0){
-        for (int i = 0; i < 180; i= i + 10){
+      else if ((k > 0) && (!state)){
+        for (int i = 0; i < 180; i++){
           SERVO_1.write(i);
-          delay(10);
+          delay(8);
         }
+        factor = 0.47;
+        state = true;
       }
-      
-      if (average < maximum) {
-        //SERVO_1.write(179);
-        lthreshold = maximum * 0.60;
-        stage1 = false;
-        stage2 = true;
-        }
+
+    if (average < maximum) {
+      //SERVO_1.write(179);
+      lthreshold = maximum * factor;
+      stage1 = false;
+      stage2 = true;
+      }
     }
     else{
       SERVO_1.write(0);
@@ -104,7 +112,8 @@ void loop(){
   if (stage2){
     if (average < lthreshold) {
       counter = 0;
-      k = 0;
+      k = 0.0;
+      state = false;
       stage3 = true;
       stage2 = false;
     }
