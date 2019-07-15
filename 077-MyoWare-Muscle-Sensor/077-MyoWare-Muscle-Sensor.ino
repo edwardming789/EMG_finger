@@ -33,6 +33,7 @@ float factor = 0.0;
 bool stage1;
 bool stage2 = false;
 bool stage3 = false;
+bool stage4 = false;
 bool state = false;
 /*-------------------------------- void setup ------------------------------------------------*/
 
@@ -79,7 +80,6 @@ void loop(){
       else {
         k = ((float)(average - avg[0]))/10.0;
         counter = 0;
-        
         //Serial.println(k);
       }
 
@@ -98,7 +98,6 @@ void loop(){
       }
 
     if (average < maximum) {
-      //SERVO_1.write(179);
       lthreshold = maximum * factor;
       stage1 = false;
       stage2 = true;
@@ -122,10 +121,15 @@ void loop(){
   if (stage3){
     if (average > lthreshold) {
       SERVO_1.write(0);
+      stage3 = false;
+      stage4 = true;
     }
+  }
+
+  if (stage4){
     if (average < baseline) {
         maximum = 0;
-        stage3 = false;
+        stage4 = false;
         stage1 = true;
     }
   }
