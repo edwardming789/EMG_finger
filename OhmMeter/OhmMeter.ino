@@ -1,4 +1,4 @@
-int analogPin= 0;
+int analogPin= 1;
 int raw= 0;
 int Vin= 5;
 float Vout= 0;
@@ -21,8 +21,9 @@ raw= analogRead(analogPin);
   Vout= (buffer)/1024.0;
   buffer= (Vin/Vout) -1;
   R2= R1 * buffer/1000.0;
-    if ((R2 <=120) && (R2>=80)){
-      F = map(R2,120,80,100,400);
+    if (R2>10000){
+      R2 = 10000;
+      //F = map(R2,120,80,100,400);
     }
   Serial.println(R2);
   }

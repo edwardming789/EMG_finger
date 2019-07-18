@@ -2,8 +2,8 @@
 
 //Threshold for servo motor control with muscle sensor. 
 //You can set a threshold according to the maximum and minimum values of the muscle sensor.
-#define THRESHOLD 180
-#define baseline 130
+#define THRESHOLD 200
+#define baseline 90
 //Pin number where the sensor is connected. (Analog 0)
 #define EMG_PIN 0
 #define analogPin 1
@@ -56,6 +56,7 @@ void setup(){
   //Set servo motor to digital pin 3
   SERVO_1.attach(SERVO_PIN);
   stage1 = true;
+  R = 0;
 }
 
 /*--------------------------------  void loop  ------------------------------------------------*/
@@ -92,18 +93,24 @@ void loop(){
         //Serial.println(k);
       }
 
-      if ((k > 10) && (average > 180) && (!state)) {
+      if ((k > 5) && (average > 180) && (!state)) {
+        //SERVO_1.write(179);
         for (int i = 0; i < 180; i++){
           SERVO_1.write(i);
           raw = analogRead(analogPin);
           R = OhmMeter(raw);
-          /*if ((R > 12000) && (i > 40)){
+          //Serial.println(R);
+          if ((R > 90000) && (i > 30)){
             delay(3000);
+            SERVO_1.write(0);
+            stage1 = false;
+            stage4 = true;
+            state = false;
             goto situation1;
-          }*/
+          }
+          delay(1);
         }
-        //situation1:
-        factor = 0.47;
+        factor = 0.42;
         state = true;
       }
       else if ((k > 0) && (!state)){
@@ -111,14 +118,19 @@ void loop(){
           SERVO_1.write(i);
           raw = analogRead(analogPin);
           R = OhmMeter(raw);
-          /*if ((R > 12000) && (i >40)){
+          //Serial.println(R);
+          if ((R > 20000) && (i > 30)){
             delay(3000);
-            goto situation2;
-          }*/
+            SERVO_1.write(0);
+            stage1 = false;
+            stage4 = true;
+            state = false;
+            goto situation1;
+          }
           delay(8);
         }
         //situation2:
-        factor = 0.7;
+        factor = 0.73;
         state = true;
       }
 
@@ -129,10 +141,11 @@ void loop(){
       }
     }
     else{
+      R = 0;
       SERVO_1.write(0);
     }
   }
-
+situation1:
   if (stage2){
     if (average < lthreshold) {
       counter = 0;
@@ -149,6 +162,12 @@ void loop(){
       stage3 = false;
       stage4 = true;
     }
+    /*if (average < baseline){
+      maximum = 0;
+      R = 0;
+      stage3 = false;
+      stage1 = true;
+    }*/
   }
 
   if (stage4){
@@ -162,7 +181,6 @@ void loop(){
   
   //Serial.println(k);
   Serial.println(average);
-  delay(1);
 }
 
 float OhmMeter(int reading){

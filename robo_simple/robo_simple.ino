@@ -1,7 +1,7 @@
 #include <Servo.h>
 
 Servo servoindex;          // Define index servo
-int analogPin= 0;
+int analogPin= 1;
 int raw= 0;
 int Vin= 5;
 float Vout= 0;
