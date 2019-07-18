@@ -24,6 +24,6 @@ raw= analogRead(analogPin);
     if ((R2 <=120) && (R2>=80)){
       F = map(R2,120,80,100,400);
     }
-  Serial.println(F);
+  Serial.println(R2);
   }
 }
