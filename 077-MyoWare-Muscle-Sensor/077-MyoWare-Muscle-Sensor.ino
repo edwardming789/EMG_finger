@@ -93,7 +93,7 @@ void loop(){
         //Serial.println(k);
       }
 
-      if ((k > 5) && (average > 180) && (!state)) {
+      if ((k > 5L) && (average > 180) && (!state)) {
         //SERVO_1.write(179);
         for (int i = 0; i < 180; i++){
           SERVO_1.write(i);
@@ -110,7 +110,7 @@ void loop(){
           }
           delay(1);
         }
-        factor = 0.42;
+        factor = 0.58;
         state = true;
       }
       else if ((k > 0) && (!state)){
@@ -130,7 +130,7 @@ void loop(){
           delay(8);
         }
         //situation2:
-        factor = 0.73;
+        factor = 0.72;
         state = true;
       }
 
